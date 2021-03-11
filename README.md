@@ -9,7 +9,7 @@ Demonstrates an example of RabbitMQ service with docker and docker-compose
 
 
 ## Run
-
   `docker-compose build`
+
   `docker-compose up -d`
     

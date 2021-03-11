@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  
+  rabbitmq:
+
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
+    networks:
+      - rabbitmq_net
+
+  meter:
+
+    build: meter
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./meter:/usr/src/app/
+    environment:
+      RABBIT_HOST: rabbitmq
+    networks:
+      - rabbitmq_net
+
+  pv_simulator:
+    build: pv_simulator
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./pv_simulator:/usr/src/app/
+    environment:
+      AMQP_URL: 'amqp://guest:guest@rabbitmq:5672/%2F'
+      RABBIT_HOST: rabbitmq
+    networks:
+      - rabbitmq_net
+
+
+networks:
+  rabbitmq_net:
+    driver: bridge
+
